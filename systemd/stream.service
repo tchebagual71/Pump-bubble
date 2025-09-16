@@ -1,0 +1,32 @@
+[Unit]
+Description=RTMP Streamer - Stream Service
+Documentation=man:ffmpeg(1)
+After=network.target xscreen.service
+Requires=xscreen.service
+
+[Service]
+Type=exec
+User=rtmpstreamer
+Group=rtmpstreamer
+ExecStart=/opt/rtmp-streamer/scripts/start-stream.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables
+Environment=DISPLAY_NUM=99
+Environment=APP_URL=http://localhost:3000
+Environment=RTMP_URL=rtmp://live.twitch.tv/live/YOUR_STREAM_KEY
+Environment=LOG_FILE=/var/log/rtmp-streamer/stream.log
+Environment=CHROME_USER_DATA_DIR=/tmp/chrome-streaming
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/rtmp-streamer /tmp
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
