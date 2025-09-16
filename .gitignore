@@ -1,0 +1,19 @@
+# Logs
+*.log
+/var/log/
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Chrome user data
+chrome-streaming/
+chrome-test/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Runtime files
+*.pid
+*.sock

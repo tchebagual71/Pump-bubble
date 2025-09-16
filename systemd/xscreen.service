@@ -1,0 +1,29 @@
+[Unit]
+Description=RTMP Streamer - Virtual Display (Xvfb)
+Documentation=man:Xvfb(1)
+After=network.target
+
+[Service]
+Type=exec
+User=rtmpstreamer
+Group=rtmpstreamer
+ExecStart=/opt/rtmp-streamer/scripts/start-xscreen.sh
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables
+Environment=DISPLAY_NUM=99
+Environment=SCREEN_RESOLUTION=1920x1080x24
+Environment=LOG_FILE=/var/log/rtmp-streamer/xscreen.log
+
+# Security settings
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/rtmp-streamer /tmp
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
