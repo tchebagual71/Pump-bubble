@@ -1,0 +1,22 @@
+[Unit]
+Description=X Virtual Framebuffer for RTMP Streaming
+After=network.target
+Wants=network.target
+
+[Service]
+Type=exec
+User=stream
+Group=stream
+WorkingDirectory=/opt/pump-bubble
+ExecStart=/opt/pump-bubble/scripts/start-xscreen.sh
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Kill child processes when service stops
+KillMode=process
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

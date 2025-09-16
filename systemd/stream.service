@@ -1,0 +1,25 @@
+[Unit]
+Description=24/7 RTMP Stream Service
+After=network.target xscreen.service
+Wants=network.target
+Requires=xscreen.service
+
+[Service]
+Type=exec
+User=stream
+Group=stream
+WorkingDirectory=/opt/pump-bubble
+Environment=APP_URL=http://localhost:3000
+Environment=RTMP_URL=rtmp://localhost/live/stream
+ExecStart=/opt/pump-bubble/scripts/start-stream.sh
+Restart=always
+RestartSec=15
+StandardOutput=journal
+StandardError=journal
+
+# Kill child processes when service stops
+KillMode=process
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
