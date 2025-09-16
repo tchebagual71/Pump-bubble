@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pump Bubble - Solana Listener Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        .event { background-color: #f8f9fa; border: 1px solid #dee2e6; margin: 5px 0; padding: 10px; border-radius: 3px; }
+        .wallet { font-family: monospace; word-break: break-all; }
+        pre { background-color: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🫧 Pump Bubble - Solana Listener</h1>
+        
+        <div id="status" class="status disconnected">
+            Disconnected
+        </div>
+        
+        <h2>Live Events</h2>
+        <div id="events"></div>
+        
+        <h2>Wallet Totals</h2>
+        <div id="totals"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const eventsDiv = document.getElementById('events');
+        const totalsDiv = document.getElementById('totals');
+        const walletTotals = new Map();
+
+        function updateStatus(connected) {
+            statusDiv.className = `status ${connected ? 'connected' : 'disconnected'}`;
+            statusDiv.textContent = connected ? 'Connected to Solana Listener' : 'Disconnected';
+        }
+
+        function formatWallet(wallet) {
+            return wallet.length > 20 ? 
+                `${wallet.substring(0, 8)}...${wallet.substring(wallet.length - 8)}` : 
+                wallet;
+        }
+
+        function addEvent(data) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'event';
+            
+            if (data.type === 'connected') {
+                eventDiv.innerHTML = '<strong>Connected to event stream</strong>';
+            } else {
+                // Update wallet totals
+                walletTotals.set(data.wallet, data.total);
+                
+                eventDiv.innerHTML = `
+                    <strong>Wallet:</strong> <span class="wallet">${formatWallet(data.wallet)}</span><br>
+                    <strong>Delta:</strong> ${data.delta > 0 ? '+' : ''}${data.delta.toFixed(6)}<br>
+                    <strong>Total:</strong> ${data.total.toFixed(6)}<br>
+                    <strong>Time:</strong> ${new Date(data.timestamp).toLocaleTimeString()}<br>
+                    <strong>Signature:</strong> <span class="wallet">${data.signature ? formatWallet(data.signature) : 'N/A'}</span>
+                `;
+            }
+            
+            eventsDiv.insertBefore(eventDiv, eventsDiv.firstChild);
+            
+            // Keep only last 20 events
+            while (eventsDiv.children.length > 20) {
+                eventsDiv.removeChild(eventsDiv.lastChild);
+            }
+            
+            updateTotals();
+        }
+
+        function updateTotals() {
+            if (walletTotals.size === 0) {
+                totalsDiv.innerHTML = '<em>No wallet data yet...</em>';
+                return;
+            }
+            
+            let html = '<table border="1" style="width: 100%; border-collapse: collapse;"><tr><th>Wallet</th><th>Total</th></tr>';
+            
+            // Sort by total descending
+            const sorted = Array.from(walletTotals.entries()).sort((a, b) => b[1] - a[1]);
+            
+            sorted.forEach(([wallet, total]) => {
+                html += `<tr><td class="wallet">${formatWallet(wallet)}</td><td>${total.toFixed(6)}</td></tr>`;
+            });
+            
+            html += '</table>';
+            totalsDiv.innerHTML = html;
+        }
+
+        // Connect to SSE endpoint
+        const eventSource = new EventSource('/api/events');
+        
+        eventSource.onopen = function() {
+            updateStatus(true);
+        };
+        
+        eventSource.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                addEvent(data);
+            } catch (error) {
+                console.error('Error parsing event data:', error);
+            }
+        };
+        
+        eventSource.onerror = function() {
+            updateStatus(false);
+        };
+        
+        // Initial setup
+        updateStatus(false);
+        updateTotals();
+    </script>
+</body>
+</html>

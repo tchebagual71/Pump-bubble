@@ -1,0 +1,19 @@
+{
+  "name": "pump-bubble",
+  "version": "1.0.0",
+  "description": "Solana-native listener for mint transfers and AMM swaps",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["solana", "defi", "listener", "sse"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "express": "^5.1.0"
+  }
+}
