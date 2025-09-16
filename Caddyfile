@@ -2,20 +2,14 @@
     # Automatic HTTPS
     tls {$TLS_EMAIL:internal}
     
-    # Enable HTTP/2
-    protocols h1 h2
+    # HTTP/2 is enabled by default in Caddy 2
     
     # Gzip compression
     encode gzip
     
-    # Rate limiting
-    rate_limit {
-        zone rate_limit_zone {
-            key {remote_host}
-            events 100
-            window 1m
-        }
-    }
+    # Rate limiting (basic implementation with Caddy)
+    # Note: Advanced rate limiting requires caddy-ratelimit plugin
+    # For production, consider using external rate limiting solutions
     
     # Security headers
     header {

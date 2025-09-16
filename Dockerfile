@@ -6,10 +6,10 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --omit=dev
+RUN npm install --only=production
 
-# Copy application code
-COPY . .
+# Copy application code (excluding node_modules)
+COPY index.js ./
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
