@@ -122,3 +122,63 @@ If a deposit or trade execution fails:
 ## Getting Help
 
 For additional help, contact the DAO administrators through the Telegram group.
+
+## For Developers
+
+### Using the SDK
+
+The Pump-bubble SDK provides programmatic access to all DAO functionality:
+
+```typescript
+import { DaoClient, MultisigClient, GovernanceClient } from '@pump-bubble/sdk';
+
+// Create client instances
+const dao = new DaoClient(connection, wallet, PROGRAM_ID);
+const multisig = new MultisigClient(connection, wallet);
+const governance = new GovernanceClient(connection, wallet);
+```
+
+#### DAO Operations
+
+```typescript
+// Deposit USDC to the DAO
+await dao.deposit(amountInUsdc);
+
+// Withdraw USDC from the DAO
+await dao.withdraw(amountInUsdc);
+
+// Execute a trade after governance approval
+await dao.executeTrade(proposalAddress, fromMint, toMint, amountIn, minAmountOut);
+```
+
+#### Multisig Operations
+
+```typescript
+// Create a new transaction
+const txAddress = await multisig.createTransaction(multisigAddress, instructions);
+
+// Approve a transaction
+await multisig.approveTransaction(multisigAddress, txAddress);
+
+// Execute a transaction after enough approvals
+await multisig.executeTransaction(multisigAddress, txAddress);
+```
+
+#### Governance Operations
+
+```typescript
+// Create a new proposal
+const proposalAddress = await governance.createProposal(
+  realmAddress,
+  tokenMint,
+  'Trade SOL for USDC',
+  'Proposal to buy 10 SOL using USDC from treasury',
+  instructions
+);
+
+// Vote on a proposal
+await governance.castVote(realmAddress, proposalAddress, tokenMint, 'yes');
+
+// Execute an approved proposal
+await governance.executeProposal(proposalAddress);
+```

@@ -62,7 +62,15 @@ The backend server handles:
 - Business logic and transaction preparation
 - Database interactions
 
-### 3. Database (PostgreSQL)
+### 3. SDK
+
+The Pump-bubble SDK provides a unified interface for interacting with the blockchain components:
+- DAO module for interacting with the Anchor program
+- Multisig module for Squads treasury management
+- Governance module for SPL Governance integration
+- Shared types and utilities
+
+### 4. Database (PostgreSQL)
 
 The PostgreSQL database stores:
 - User information and wallet associations
@@ -70,7 +78,7 @@ The PostgreSQL database stores:
 - Transaction history
 - DAO configuration and parameters
 
-### 4. Squads Multisig
+### 5. Squads Multisig
 
 The Squads multisig wallet:
 - Holds the DAO treasury (primarily USDC)
@@ -78,7 +86,7 @@ The Squads multisig wallet:
 - Enforces governance decisions
 - Provides an audit trail of all treasury movements
 
-### 5. SPL Governance (Realms)
+### 6. SPL Governance (Realms)
 
 Realms provides:
 - On-chain governance functionality
@@ -86,14 +94,14 @@ Realms provides:
 - Voting mechanisms for DAO decisions
 - Execution of approved proposals
 
-### 6. Grape Protocol
+### 7. Grape Protocol
 
 Grape Protocol provides:
 - Token-gated access control
 - Membership verification
 - Role-based permissions
 
-### 7. Jupiter Aggregator
+### 8. Jupiter Aggregator
 
 Jupiter is used for:
 - Trade execution across multiple Solana DEXs

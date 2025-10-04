@@ -107,9 +107,39 @@ SHARE_TOKEN_MINT_ADDRESS=your_dao_share_token_address
 JUPITER_QUOTE_API=https://quote-api.jup.ag/v6
 ```
 
-## Step 8: Start the Bot
+## Step 8: Build and Use SDK
 
 ```bash
+cd ../sdk
+npm install
+npm run build
+```
+
+The SDK provides a unified interface for interacting with all DAO components:
+
+```typescript
+import { DaoClient, MultisigClient, GovernanceClient } from '@pump-bubble/sdk';
+import { Connection, Keypair } from '@solana/web3.js';
+
+// Connect to Solana
+const connection = new Connection(SOLANA_RPC_URL);
+const wallet = { /* your wallet implementation */ };
+
+// Create client instances
+const dao = new DaoClient(connection, wallet, PROGRAM_ID);
+const multisig = new MultisigClient(connection, wallet);
+const governance = new GovernanceClient(connection, wallet);
+
+// Use the clients
+await dao.deposit(amount);
+await multisig.createTransaction(multisigAddress, instructions);
+await governance.castVote(realmAddress, proposalAddress, mintAddress, 'yes');
+```
+
+## Step 9: Start the Bot
+
+```bash
+cd ../bot
 npm install
 npm run build
 npm run start

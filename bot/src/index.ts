@@ -4,6 +4,7 @@ import { run } from '@grammyjs/runner';
 import { BotContext } from './types/context';
 import { configureCommands } from './commands';
 import { setupMiddleware } from './middleware/auth';
+import { membershipMiddleware } from './middleware/membership';
 import logger from './utils/logger';
 
 dotenv.config();
@@ -20,6 +21,9 @@ bot.use(session({
 
 // Set up authentication middleware
 setupMiddleware(bot);
+
+// Set up membership middleware (token-gated access)
+bot.use(membershipMiddleware);
 
 // Configure commands
 configureCommands(bot);
