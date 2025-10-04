@@ -1,0 +1,61 @@
+
+IMPLEMENTATION GUIDE FOR COMPLETING THE PUMP‑BUBBLE REPOSITORY
+
+1. **Fix and complete the Anchor program**
+   - Open `anchor/programs/pump-bubble-dao/src/lib.rs` and implement the `execute_trade` instruction.  It should:
+     * Verify that the `proposal_id` has been approved through SPL Governance by calling the Realms program (you can pass the proposal’s address as part of the instruction arguments).
+     * Use the DAO’s USDC vault balance to fund the trade.  Query the desired quote via your off‑chain bot using Jupiter API and encode the swap instruction into a transaction.  Build a Solana transaction containing the Jupiter swap instruction and return the encoded instruction data to the Anchor program.
+     * Add a cross‑program invocation to the Squads multisig.  Create and approve a multisig transaction using `SquadsMultisigService.createTransaction` and `approveTransaction`.  Only after the threshold is met should the actual transfer of funds take place.
+     * Update the DAO state if necessary (e.g., record the last executed trade ID or adjust totals).  Ensure the function emits logs and errors appropriately.
+
+2. **Integrate deposit and withdrawal with the Anchor program**
+   - Replace the mock implementation in `bot/src/services/vault.ts` with real calls:
+     * Use Anchor’s generated TypeScript IDL to send `deposit` and `withdraw` instructions.  Import your IDL (`target/idl/pump_bubble_dao.json`) and use Anchor’s `Program` class to build and send these instructions using the user’s wallet.
+     * Retrieve the program ID and DAO accounts from your config files; pass them to the Anchor `deposit` instruction.  After sending a deposit transaction, wait for confirmation and then update the database with the transaction signature and the minted share amount.
+     * For withdrawals, calculate the share amount from the database, send the `withdraw` instruction via the multisig (Squads) and wait for it to be executed.  Notify users that the withdrawal is pending multisig approval.
+
+3. **Implement membership gating in the bot**
+   - Add a new middleware file `bot/src/middleware/membership.ts` that runs on every command after authentication.  It should:
+     * Load the Grape community ID from environment variables.
+     * Call `grapeService.checkAccess(walletAddress, communityId)` to verify whether the user’s wallet holds the required token amount.
+     * If `checkAccess` returns false, reply with an error (“You do not have the required tokens to access this DAO”) and stop processing further.
+   - Register this middleware in `bot/src/index.ts` right after session middleware and before command registration.
+
+4. **Integrate SPL Governance (Realms) for proposals and voting**
+   - Replace the off‑chain governance logic in `bot/src/services/governance.ts` with calls to `governanceService` in the scripts directory.  Implement functions:
+     * `createProposal(daoConfig, proposerPublicKey, name, description, amount, tokenMint)` that uses `GovernanceService.createProposal` to create a proposal on chain and returns the on‑chain proposal address.  Store the proposal metadata in Postgres with this address.
+     * `castVote(proposalId, voterWallet, vote)` that signs and sends a vote transaction via `GovernanceService.castVote`, then updates the Postgres record with the vote result.
+     * `executeProposal(proposalId, executorWallet)` that calls `governanceService.executeProposal` to mark the proposal executed on chain, then triggers the Anchor `execute_trade` instruction via the multisig as described above.
+   - Update the `/propose`, `/vote`, `/execute` commands to use these functions.  Remove the mock calculations from the service.
+
+5. **Add missing CLI scripts**
+   - In `scripts/src/multisig`, create `add-member.ts`, `create-transaction.ts`, `approve-transaction.ts`, and `execute-transaction.ts`.  These should wrap around `SquadsMultisigService` methods:
+     * `add-member.ts` should add a new member public key to an existing multisig.
+     * `create-transaction.ts` should assemble a transaction (e.g., a withdrawal or trade) and return the transaction address.
+     * `approve-transaction.ts` should send an approval from a signer’s keypair.
+     * `execute-transaction.ts` should execute a fully approved transaction.
+   - Update `scripts/package.json` to reference the new files.
+
+6. **Create a shared SDK**
+   - Add a new directory `/sdk` with TypeScript wrappers for your Anchor program, Squads multisig and SPL Governance.  Include:
+     * `dao.ts`: functions to initialize the DAO, deposit, withdraw and execute trades.  Wrap calls to the Anchor program using the generated IDL.
+     * `multisig.ts`: functions to create/approve/execute transactions via `SquadsMultisigService` and to fetch multisig status.
+     * `governance.ts`: functions to create realms, proposals, vote, and get proposal/vote information using `GovernanceService`.
+   - Export these modules so both the bot and CLI scripts can import them.
+
+7. **Clean up and extend documentation**
+   - Fix formatting errors and duplicated lines in `README.md` around the command listhttps://raw.githubusercontent.com/tchebagual71/Pump-bubble/main/README.md#:~:text=.  Ensure each command has a single clear description.
+   - In `docs/architecture.md` and `docs/user-guide.md`, update descriptions where necessary to reflect on‑chain execution and membership verification.  Include examples showing how token‑gated access works and how proposals are now on chain.
+   - Add a new document `docs/developer-guide.md` explaining how to build and test the Anchor program, run the bot locally with a devnet, and contribute to the codebase.
+
+8. **Update configuration files**
+   - Ensure `.env.example` (or an equivalent file) contains all required variables: `BOT_TOKEN`, `SOLANA_RPC_URL`, `PROGRAM_ID`, `SQUADS_MULTISIG_ADDRESS`, `GRAPE_ACCESS_TOKEN_MINT`, `GRAPE_COMMUNITY_ID`, `GOVERNANCE_REALM_ADDRESS`, `SHARE_TOKEN_MINT_ADDRESS`, `GRAPE_API_URL`, `GRAPE_ACCESS_TOKEN`, and `JUPITER_QUOTE_API`.
+   - Provide a sample `config/multisig.json`, `config/token-gate.json`, and `config/governance.json` to guide deployment.
+
+9. **Testing and deployment**
+   - Write unit tests for the Anchor program using the Anchor testing framework.  Cover deposit, withdraw and execute_trade scenarios.
+   - Add integration tests in `bot/test` to simulate user flows: joining the DAO, depositing funds, creating and voting on proposals, executing trades and withdrawing.
+   - Configure GitHub Actions or another CI to run linting and tests on pull requests.
+   - When deploying, start with Solana devnet and small test amounts.  After verifying all components, redeploy to mainnet.
+
+Following these steps will bring the Pump‑bubble repository into full alignment with the original outline and ensure that the Telegram bot, on‑chain programs and governance processes function correctly.
