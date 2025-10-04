@@ -1,0 +1,34 @@
+{
+  "name": "pump-bubble-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for Pump-bubble Solana DAO",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "create-multisig": "ts-node src/multisig/create-multisig.ts",
+    "add-member": "ts-node src/multisig/add-member.ts",
+    "create-transaction": "ts-node src/multisig/create-transaction.ts",
+    "approve-transaction": "ts-node src/multisig/approve-transaction.ts",
+    "execute-transaction": "ts-node src/multisig/execute-transaction.ts"
+  },
+  "dependencies": {
+    "@project-serum/anchor": "^0.26.0",
+    "@solana/spl-token": "^0.3.9",
+    "@solana/web3.js": "^1.90.0",
+    "@squadscrypto/squads-mpl": "^1.2.0",
+    "bn.js": "^5.2.1",
+    "bs58": "^5.0.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.3",
+    "pg-promise": "^11.5.4",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.5",
+    "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.9",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  }
+}
