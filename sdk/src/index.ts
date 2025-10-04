@@ -11,3 +11,4 @@
 export * from './dao';
 export * from './multisig';
 export * from './governance';
+export * from './jupiter';

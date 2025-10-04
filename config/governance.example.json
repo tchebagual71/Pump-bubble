@@ -1,0 +1,16 @@
+{
+  "realmAddress": "YOUR_REALM_ADDRESS_HERE",
+  "realmName": "Pump-bubble DAO",
+  "communityMint": "YOUR_SHARE_TOKEN_MINT_HERE",
+  "councilMint": null,
+  "governanceProgram": "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw",
+  "minCommunityTokensToCreateProposal": "1000000",
+  "votingConfig": {
+    "minVotingPeriodSlots": 7200,
+    "maxVotingPeriodSlots": 72000,
+    "voteThresholdPercentage": 60,
+    "minInstructionHoldUpTime": 0
+  },
+  "network": "devnet",
+  "createdAt": "2024-01-01T00:00:00.000Z"
+}

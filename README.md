@@ -113,30 +113,60 @@ npm run dev
 
 - `/start` - Introduction to the DAO
 - `/help` - Display available commands
-- `/connect_wallet_wallet` - Connect your Solana wallet
-- `/deposit <amount> <amount>` - Deposit USDC to receive shares
+- `/connect_wallet` - Connect your Solana wallet
+- `/deposit <amount>` - Deposit USDC to receive shares
 - `/balance` - Check your DAO shares and USDC balance
-- `/propose_trade <token> <amount>_trade <token> <amount>` - Propose a new trade
-- `/votvote <proposal_id> <ye <proposal_id> <yes/no>` - Vote on an active proposal
-- `/es/no>` - Vote on an active proposal
-- `/execute <proposal_id> <proposal_id>` - Execute an approved trade via Jupite via Jupiterr
+- `/propose_trade <token> <amount>` - Propose a new trade
+- `/vote <proposal_id> <yes/no>` - Vote on an active proposal
+- `/execute <proposal_id>` - Execute an approved trade via Jupiter
 - `/governance` - View active proposals
 - `/assign_trader @user` - Propose to grant trading permissions to a user
-- `/withdraw <active proposals
-- `/assigmoun_trat>` - Withdraw funders by burning shares
+- `/withdraw <amount>` - Withdraw funds by burning shares
 
 For a complete guide on using the bot, see [User Guide](./docs/user-guide.md).
 
-## Architecture Over@user` - Propiew
+## Architecture Overview
 
-1. **Telegram Bot** - Built wish grammY, handles user commands and messages, interacts with backend services
-2. **Backend & tDatabase** - No grant tradide.js server connecting to Solanga RPC, Squads multisig, Jupiter aggregator and Realms governance
+1. **Telegram Bot** - Built with grammY, handles user commands and messages, interacts with backend services
+2. **Backend & Database** - Node.js server connecting to Solana RPC, Squads multisig, Jupiter aggregator and Realms governance
 3. **Smart Contracts** - Squads multisig holds pooled funds, Anchor vault program handles deposits and share issuance
 4. **Governance Layer** - Realms for proposals and voting, triggering instructions on Squads via programmatic interfaces
-5. **Membership & Gating** - Grapee Access ensurmissions tes only token holders can join the grou a user
-- `/withdraw <am chat
-6. **DEX Aggregatiount>` - Withdraw funds by burning sharen** - Jupiter API is
+5. **Membership & Gating** - Grape Access ensures only token holders can join the group chat
+6. **DEX Aggregation** - Jupiter API is used to fetch quotes and execute token swaps
+7. **Trading Automation** - CLI scripts automate swap instruction preparation and multisig transaction creation
 
-For  used to fetch quotes a compnd execute token swaps
+For detailed architecture diagrams, see [Architecture Documentation](./docs/architecture.md).
 
-For detailete guide on using the bot, see [User Guide](./docs/ued architecture diagrams, see [Architecture Documentation](./docser-guide.md)./architecture.md).
+## New Features
+
+### Trading Automation Scripts
+
+The repository now includes CLI utilities for automating trade execution:
+
+- **prepare-trade**: Fetches Jupiter quotes and encodes swap instructions
+- **create-trade-transaction**: Creates multisig transactions from prepared trades
+
+See `scripts/src/trading/README.md` for the complete workflow.
+
+### Jupiter Integration SDK
+
+The SDK now includes a Jupiter module for easy integration:
+
+```typescript
+import { encodeJupiterSwap, getJupiterQuote } from '@pump-bubble/sdk';
+
+// Get a quote
+const quote = await getJupiterQuote(inputMint, outputMint, amount, slippage);
+
+// Encode for Anchor program
+const swapData = await encodeJupiterSwap(inputMint, outputMint, amount, slippage, multisigPubkey);
+```
+
+### Configuration Examples
+
+Example configuration files are provided in the `config/` directory:
+- `multisig.example.json` - Squads multisig setup
+- `governance.example.json` - SPL Governance realm configuration
+- `token-gate.example.json` - Grape Protocol access control
+
+Copy these files and customize for your DAO deployment.

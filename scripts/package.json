@@ -9,13 +9,16 @@
     "add-member": "ts-node src/multisig/add-member.ts",
     "create-transaction": "ts-node src/multisig/create-transaction.ts",
     "approve-transaction": "ts-node src/multisig/approve-transaction.ts",
-    "execute-transaction": "ts-node src/multisig/execute-transaction.ts"
+    "execute-transaction": "ts-node src/multisig/execute-transaction.ts",
+    "prepare-trade": "ts-node src/trading/prepare-trade.ts",
+    "create-trade-transaction": "ts-node src/trading/create-trade-transaction.ts",
+    "demo": "ts-node test/integration-demo.ts"
   },
   "dependencies": {
     "@project-serum/anchor": "^0.26.0",
     "@solana/spl-token": "^0.3.9",
     "@solana/web3.js": "^1.90.0",
-    "@squadscrypto/squads-mpl": "^1.2.0",
+    "@sqds/multisig": "^2.1.4",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "commander": "^11.1.0",
