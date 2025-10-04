@@ -11,7 +11,8 @@
     "approve-transaction": "ts-node src/multisig/approve-transaction.ts",
     "execute-transaction": "ts-node src/multisig/execute-transaction.ts",
     "prepare-trade": "ts-node src/trading/prepare-trade.ts",
-    "create-trade-transaction": "ts-node src/trading/create-trade-transaction.ts"
+    "create-trade-transaction": "ts-node src/trading/create-trade-transaction.ts",
+    "demo": "ts-node test/integration-demo.ts"
   },
   "dependencies": {
     "@project-serum/anchor": "^0.26.0",
