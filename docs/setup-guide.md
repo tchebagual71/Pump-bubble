@@ -178,7 +178,29 @@ To customize your DAO name and other parameters, edit:
 To adjust slippage tolerance and other trading parameters:
 
 1. Edit `bot/src/services/jupiter.ts`
-2. Modify the default slippage in `scripts/src/trading/execute-trade.ts`
+2. Modify the default slippage in `scripts/src/trading/prepare-trade.ts`
+3. Review trading workflow documentation in `scripts/src/trading/README.md`
+
+### Trading Automation
+
+The repository includes CLI tools for automating trade execution:
+
+```bash
+# Prepare a swap instruction
+npm run prepare-trade -- \
+  --input-mint <USDC_MINT> \
+  --output-mint <SOL_MINT> \
+  --amount 1000000 \
+  --slippage 50
+
+# Create multisig transaction from prepared trade
+npm run create-trade-transaction -- \
+  --trade-file ./trade-prepared.json \
+  --proposal-id 1 \
+  --proposal-address <PROPOSAL_ADDRESS>
+```
+
+See `scripts/src/trading/README.md` for complete workflow documentation.
 
 ### Grape Protocol Access Control
 
