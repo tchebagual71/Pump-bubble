@@ -1,0 +1,15 @@
+{
+  "communityName": "Pump-bubble DAO",
+  "accessTokenMint": "YOUR_ACCESS_TOKEN_MINT_HERE",
+  "minimumBalance": "1",
+  "grapeConfig": {
+    "communityId": "YOUR_GRAPE_COMMUNITY_ID",
+    "apiUrl": "https://api.grap3.io",
+    "requireNFT": false,
+    "nftCollectionAddress": null,
+    "requiredTraits": []
+  },
+  "network": "devnet",
+  "enabled": true,
+  "createdAt": "2024-01-01T00:00:00.000Z"
+}

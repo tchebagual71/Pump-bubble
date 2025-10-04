@@ -1,0 +1,12 @@
+{
+  "multisigAddress": "YOUR_SQUADS_MULTISIG_ADDRESS_HERE",
+  "threshold": 2,
+  "members": [
+    "MEMBER_1_PUBKEY_HERE",
+    "MEMBER_2_PUBKEY_HERE",
+    "MEMBER_3_PUBKEY_HERE"
+  ],
+  "description": "Pump-bubble DAO Treasury Multisig",
+  "network": "devnet",
+  "createdAt": "2024-01-01T00:00:00.000Z"
+}

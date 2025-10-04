@@ -14,7 +14,8 @@
     "@solana/spl-governance": "^0.3.25",
     "@solana/spl-token": "^0.3.9",
     "@solana/web3.js": "^1.90.0",
-    "@squadscrypto/squads-mpl": "^1.2.0",
+    "@sqds/multisig": "^2.1.4",
+    "axios": "^1.6.0",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0"
   },
