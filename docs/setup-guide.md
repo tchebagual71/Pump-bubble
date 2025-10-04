@@ -87,13 +87,24 @@ cp .env.example .env
 Edit the `.env` file with your specific configuration:
 
 ```
+# Telegram
 BOT_TOKEN=your_telegram_bot_token
-SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+
+# Solana
+SOLANA_RPC_URL=your_helius_or_quicknode_endpoint
+PROGRAM_ID=your_anchor_program_id
+
+# Database
 DATABASE_URL=postgres://username:password@localhost:5432/pump_bubble
+
+# DAO Components
 SQUADS_MULTISIG_ADDRESS=your_multisig_address
-GRAPE_ACCESS_TOKEN=your_grape_access_token
-GOVERNANCE_PROGRAM_ID=your_governance_program_id
-MINT_TOKEN_ADDRESS=your_dao_token_address
+GRAPE_ACCESS_TOKEN_MINT=your_grape_access_token_mint
+GOVERNANCE_REALM_ADDRESS=your_governance_realm_address
+SHARE_TOKEN_MINT_ADDRESS=your_dao_share_token_address
+
+# Jupiter
+JUPITER_QUOTE_API=https://quote-api.jup.ag/v6
 ```
 
 ## Step 8: Start the Bot
@@ -107,9 +118,14 @@ npm run start
 ## Verify Setup
 
 - Send a `/start` command to your bot on Telegram
-- Connect a wallet with `/connect WALLET_ADDRESS`
+- Connect a wallet with `/connect_wallet YOUR_WALLET_ADDRESS`
 - Check your access with `/help`
 - Deposit USDC with `/deposit AMOUNT`
+- Check your balance with `/balance`
+- Test the governance by proposing a small trade: `/propose_trade SOL 0.1`
+- Vote on your proposal: `/vote PROPOSAL_ID yes`
+- After approval, execute the trade: `/execute PROPOSAL_ID`
+- Test assigning a trader role: `/assign_trader @username`
 
 ## Additional Configuration
 
@@ -126,3 +142,25 @@ To customize your DAO name and other parameters, edit:
 
 1. `bot/src/commands/start.ts`
 2. `scripts/src/governance/create-governance.ts`
+
+### Jupiter Trading Configuration
+
+To adjust slippage tolerance and other trading parameters:
+
+1. Edit `bot/src/services/jupiter.ts`
+2. Modify the default slippage in `scripts/src/trading/execute-trade.ts`
+
+### Grape Protocol Access Control
+
+To modify token requirements or roles:
+
+1. Update settings in `scripts/src/grape/create-token-gate.ts`
+2. Adjust membership verification in `bot/src/middleware/membership.ts`
+
+## Security Considerations
+
+- Use hardware wallets for multisig signers when possible
+- Regularly audit permissions and access controls
+- Start with small amounts in treasury and gradually increase as confidence grows
+- Set up monitoring and alerts for treasury movements
+- Consider implementing time-locks for large transactions

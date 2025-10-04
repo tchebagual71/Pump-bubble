@@ -6,8 +6,11 @@ import { connectWalletCommand } from './connectWallet';
 import { depositCommand } from './deposit';
 import { balanceCommand } from './balance';
 import { proposeTradeCommand } from './proposeTrade';
-import { executeTradeCommand } from './executeTrade';
-import { governanceCommand } from './governance';
+import governanceCommand from './governance';
+import voteCommand from './vote';
+import executeCommand from './execute';
+import assignTraderCommand from './assignTrader';
+import withdrawCommand from './withdraw';
 
 export function configureCommands(bot: Bot<BotContext>) {
   // Basic commands
@@ -18,9 +21,12 @@ export function configureCommands(bot: Bot<BotContext>) {
   // DAO functionality
   bot.command('deposit', depositCommand);
   bot.command('balance', balanceCommand);
-  bot.command('propose', proposeTradeCommand);
-  bot.command('execute', executeTradeCommand);
   bot.command('governance', governanceCommand);
+  bot.command('vote', voteCommand);
+  bot.command('execute', executeCommand);
+  bot.command('assign_trader', assignTraderCommand);
+  bot.command('withdraw', withdrawCommand);
+  bot.command('propose', proposeTradeCommand);
   
   // Register bot commands with Telegram
   bot.api.setMyCommands([
